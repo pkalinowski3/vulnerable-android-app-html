@@ -1,0 +1,130 @@
+<!--
+Summary:
+The following code represents a simple web page that enable users to put the notes and save them.
+This webpage can also display saved notes.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aamon's Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+        }
+        #deviceInfo {
+            background-color: #f0f0f1;
+            padding: 4.5px;
+            border-radius: 2.5px;
+            margin-bottom: 10px;
+        }
+        #noteInput {
+            width: 100%;
+            padding: px;
+            margin-bottom: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 7.5px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 8px;
+            margin: 2px 1px;
+            cursor: pointer;
+        }
+        #savedNotes {
+            margin-top: 10px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .note {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 2.5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aamon's Notes</h1>
+    <div id="deviceInfo">Checking device info...</div>
+    <textarea id="noteInput" rows="4" placeholder="Enter note here"></textarea>
+    <br>
+    <button onclick="saveNote()">Save Note</button>
+
+    <div id="savedNotes">
+        <h2>Saved Notes</h2>
+        <div id="notesList"></div>
+    </div>
+
+    <script>
+        let notes = [];
+
+        /**
+        Called when the page is loaded.
+        It tries to retrieve device information and displays it.
+        If fails, it displays an error message.
+        */
+        document.addEventListener('DOMContentLoaded', function () {
+            try {
+                var deviceInfo = Android.getDeviceInfo();
+                document.getElementById('deviceInfo').innerText = 'Device Info: ' + deviceInfo;
+            } catch (error) {
+                console.error('Error getting device info:', error);
+                document.getElementById('deviceInfo').innerText = 'Unable to retrieve device info';
+            }
+        });
+
+        /**
+        Saves the note entered by the user.
+        If the note is empty, it displays an error message and does not save the note.
+        If fails to save the note, it displays an error message.
+        */
+        function saveNote() {
+            var noteText = document.getElementById('noteInput').value;
+            if (noteText.trim() === '') {
+                alert('Please enter a note before saving.');
+                return;
+            }
+            try {
+                Android.saveNote(noteText);
+                notes.push(noteText);
+                updateNotesList();
+                document.getElementById('noteInput').value = '';
+                alert('Note saved successfully!');
+            } catch (error) {
+                console.error('Error saving note:', error);
+                alert('Failed to save note. Error: ' + error.message);
+            }
+        }
+
+        /**
+        Updates the list of saved notes.
+        It removes all the notes from the list and adds all the notes from the array.
+        */
+        function updateNotesList() {
+            var notesList = document.getElementById('notesList');
+            notesList.innerHTML = '';
+            notes.forEach(function (note, index) {
+                var noteElement = document.createElement('div');
+                noteElement.className = 'note';
+                noteElement.textContent = `Note ${index + 1}: ${note}`;
+                notesList.appendChild(noteElement);
+            });
+        }
+    </script>
+    <a href="intent://192.168.100.94#Intent;scheme=aamon;package=com.example.aamon;end">Open App</a><br>
+    <a href="intent://192.168.100.94#Intent;scheme=myapplication;package=com.example.myapplication;end">Open Example Here</a><br>
+    <a href="./risky.html">CVE-2020-6506 Testing</a>
+</body>
+</html>
+
+<!--Author: Pawel Kalinowski -->
+<!--Maintained by: Pawel Kalinowski-->
